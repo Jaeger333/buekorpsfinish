@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form action='/login' method="POST">
+        <label for="username">Username:</label>
+        <input type="text" name="username">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password">
+        <br><br>
+        <button type="submit" name="login">Login</button>
+    </form>
+
+    <br><br>
+    
+    <form action='/selfRegister' method="POST">
+        <label for="username">Username:</label>
+        <input type="text" name="username">
+        <br>
+        <label for="firstname">Firstname:</label>
+        <input type="text" name="firstname">
+        <br>
+        <label for="lastname">Lastname:</label>
+        <input type="text" name="lastname">
+        <br>
+        <label for="mobile">Mobile:</label>
+        <input type="text" name="mobile">
+        <br>
+        <label for="email">Email:</label>
+        <input type="text" name="email">
+        <br><br>
+        <button type="submit">Create user</button>
+    </form>
+</body>
+</html>

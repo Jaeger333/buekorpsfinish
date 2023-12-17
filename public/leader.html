@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leader panel</title>
+</head>
+<body>
+
+<h1>Leader panel</h1>
+<h2>Your peleton</h2>
+<div id="peletonLeadersContainer">
+    <h2>Leader</h2>
+    <div id="peletonLeaders"></div>
+    <!-- Peleton leader will be displayed here -->
+</div>
+
+
+<div id="peletonMembersContainer">
+    <h2>Soldiers</h2>
+    <table id="peletonMembers">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Peleton-id</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!-- Parent child info will be displayed here -->
+</div>
+
+<div id="userDetails">
+    <h3>Soldier info</h3>
+    <form id="userForm" action='/user' method="POST">
+        <img id="userImage" src="" alt="User's Picture" />
+        <div>
+            <label for="ID">ID:</label>
+            <input type="text" name="ID" id="ID" readonly/>
+        </div>
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" />
+        </div>
+        <div>
+            <label for="firstname">First Name:</label>
+            <input type="text" name="firstname" id="firstname" />
+        </div>
+        <div>
+            <label for="lastname">Last Name:</label>
+            <input type="text" name="lastname" id="lastname" />
+        </div>
+        <div>
+            <label for="mobile">Mobile:</label>
+            <input type="text" name = "mobile" id="mobile" />
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" name = "email" id="email" />
+        </div>
+        <div>
+            <label for="newPassword">New password:</label>
+            <input type="text" name = "newPassword" id="newPassword" />
+        </div>
+        <div>
+            <label for="peleton_id">Peleton-id:</label>
+            <input type="text" name = "peleton_id" id="peleton_id" />
+        </div>
+        <button type="submit">Update user</button>
+    </form>
+</div>
+
+<div id="parentChildInfoContainer">
+    <h2>Your children</h2>
+    <table id="parentChildren">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Mobile</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!-- Parent child info will be displayed here -->
+</div>
+
+<div id="activeUserDetails">
+    <h3>Your info</h3>
+    <form id="activeUserForm" action='/user' method="POST">
+        <img id="userImage" src="" alt="User's Picture" />
+        <div>
+            <label for="ID">ID:</label>
+            <input type="text" name="ID" id="aID" readonly/>
+        </div>
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="ausername" />
+        </div>
+        <div>
+            <label for="firstname">First Name:</label>
+            <input type="text" name="firstname" id="afirstname" />
+        </div>
+        <div>
+            <label for="lastname">Last Name:</label>
+            <input type="text" name="lastname" id="alastname" />
+        </div>
+        <div>
+            <label for="mobile">Mobile:</label>
+            <input type="text" name = "mobile" id="amobile" />
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" name = "email" id="aemail" />
+        </div>
+        <div>
+            <label for="newPassword">New password:</label>
+            <input type="text" name = "newPassword" id="anewPassword" />
+        </div>
+        <div>
+            <label for="peleton_id">Peleton-id:</label>
+            <input type="text" name = "peleton_id" id="apeleton_id" />
+        </div>
+        <button type="submit">Update info</button>
+    </form>
+</div>
+
+<script>
+
+
+document.addEventListener('DOMContentLoaded', getAndDisplayActiveUser);
+document.addEventListener('DOMContentLoaded', getAndDisplayPeletonMembers);
+document.addEventListener('DOMContentLoaded', getAndDisplayPeletonLeaders);
+
+async function getAndDisplayChildren() {
+    try {
+
+        const response = await fetch('/api/parentChildren');
+        const children = await response.json();
+
+        const parentChildren = document.getElementById('parentChildren');
+
+        children.forEach(child => {
+            console.log(child)
+            let row = parentChildren.insertRow();
+            row.insertCell().textContent = child.ID;
+            row.insertCell().textContent = child.username;
+            row.insertCell().textContent = child.firstname;
+            row.insertCell().textContent = child.lastname;
+            row.insertCell().textContent = child.mobile;
+        })
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getAndDisplayActiveUser() {
+    try {
+        const response = await fetch('/api/activeUser');
+        const user = await response.json();
+
+        document.getElementById('parentChildInfoContainer').style.display = 'none';
+
+        if (user.role == 'Parent') {
+            document.getElementById('parentChildInfoContainer').style.display = 'block';
+            getAndDisplayChildren();
+        }
+
+        document.getElementById('activeUserDetails').style.display = 'block';
+        document.getElementById('aID').value = user.ID;
+        document.getElementById('ausername').value = user.username;
+        document.getElementById('afirstname').value = user.firstname;
+        document.getElementById('alastname').value = user.lastname;
+        document.getElementById('amobile').value = user.mobile;
+        document.getElementById('aemail').value = user.email;
+        document.getElementById('anewPassword').value = "";
+        document.getElementById('apeleton_id').value = user.peleton_id;
+
+        
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getAndDisplayPeletonMembers() {
+    try {
+        const response = await fetch('/api/peletonMember');
+        const members = await response.json();
+
+        displayPeletonMembers(members);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getAndDisplayPeletonLeaders() {
+    try {
+        const response = await fetch('/api/peletonLeader');
+        const leaders = await response.json();
+
+        displayPeletonLeaders(leaders);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function displayPeletonMembers(members) {
+    
+    // Clear previous content
+    let peletonMembers = document.getElementById('peletonMembers');
+
+    members.forEach(member => {
+        console.log(member)
+        let row = peletonMembers.insertRow();
+        row.insertCell().textContent = member.ID;
+        row.insertCell().textContent = member.username;
+        row.insertCell().textContent = member.firstname;
+        row.insertCell().textContent = member.lastname;
+        row.insertCell().textContent = member.mobile;
+        row.insertCell().textContent = member.email;
+        row.insertCell().textContent = member.peleton_id;
+        row.addEventListener('click', () => {
+            showUserDetails(member);
+        });
+    });
+}
+
+function showUserDetails(user) {
+    document.getElementById('userDetails').style.display = 'block';
+    document.getElementById('ID').value = user.ID;
+    document.getElementById('username').value = user.username;
+    document.getElementById('firstname').value = user.firstname;
+    document.getElementById('lastname').value = user.lastname;
+    document.getElementById('mobile').value = user.mobile;
+    document.getElementById('email').value = user.email;
+    document.getElementById('newPassword').value = "";
+    document.getElementById('peleton_id').value = user.peleton_id;
+}
+
+function displayPeletonLeaders(leaders) {
+    const peletonLeaders = document.getElementById('peletonLeaders');
+    
+    // Clear previous content
+    peletonLeaders.innerHTML = '';
+
+    // Create a list to display peleton members
+    const ul = document.createElement('ul');
+
+    leaders.forEach(leader => {
+        const li = document.createElement('li');
+        li.textContent = `${leader.firstname} ${leader.lastname} - ${leader.mobile}`;
+        ul.appendChild(li);
+    });
+
+    // Append the list to the container
+    peletonLeaders.appendChild(ul);
+}
+
+</script>
+
+</body>
+</html>

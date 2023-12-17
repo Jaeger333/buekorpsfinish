@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th style="display:block;">ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Mobile</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="userDetails" style="display:block;">
+        <form id="userForm" action='/user' method="POST">
+            <img id="userImage" src="" alt="User's Picture" />
+            <div style="display:none;">
+                <label for="ID">ID:</label>
+                <input type="text" name="ID" id="ID" readonly />
+            </div>
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" />
+            </div>
+            <div>
+                <label for="firstname">First Name:</label>
+                <input type="text" name="firstname" id="firstname" />
+            </div>
+            <div>
+                <label for="lastname">Last Name:</label>
+                <input type="text" name="lastname" id="lastname" />
+            </div>
+            <div>
+                <label for="mobile">Mobile:</label>
+                <input type="text" name = "mobile" id="mobile" />
+            </div>
+            <button type="submit">Update User</button>
+        </form>
+    </div>
+
+    <script>
+        async function getUser() {
+            let response = await fetch('/users');
+            let users = await response.json();
+            //let users = data.results; // Assuming that the JSON has a 'results' field containing the users.
+
+            let userTable = document.querySelector('#userTable tbody');
+
+            users.forEach(user => {
+                console.log(user)
+                let row = userTable.insertRow();
+                row.insertCell().textContent = user.username;
+                row.insertCell().textContent = user.firstname;
+                row.insertCell().textContent = user.lastname;
+                row.insertCell().textContent = user.mobile;
+                row.addEventListener('click', () => {
+                    showUserDetails(user);
+                });
+            });
+        }
+
+        function showUserDetails(user) {
+            document.getElementById('userDetails').style.display = 'block';
+            document.getElementById('ID').value = user.ID;
+            document.getElementById('username').value = user.username;
+            document.getElementById('firstname').value = user.firstname;
+            document.getElementById('lastname').value = user.lastname;
+            document.getElementById('mobile').value = user.mobile;
+        }
+  
+
+        getUsers();
+    </script>
+</body>
+</html>

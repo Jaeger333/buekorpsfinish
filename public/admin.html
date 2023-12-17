@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+<body>
+    <h1>Admin panel</h1>
+    <h3>Users</h3>
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Role-id</th>
+                <th>Peleton-id</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="userDetails">
+        <br>
+        <h3>Update user</h3>
+        <form id="userForm" action='/user' method="POST">
+            <img id="userImage" src="" alt="User's Picture" />
+            <div>
+                <label for="ID">ID:</label>
+                <input type="text" name="ID" id="ID" readonly/>
+            </div>
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" />
+            </div>
+            <div>
+                <label for="firstname">First Name:</label>
+                <input type="text" name="firstname" id="firstname" />
+            </div>
+            <div>
+                <label for="lastname">Last Name:</label>
+                <input type="text" name="lastname" id="lastname" />
+            </div>
+            <div>
+                <label for="mobile">Mobile:</label>
+                <input type="text" name = "mobile" id="mobile" />
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="text" name = "email" id="email" />
+            </div>
+            <div>
+                <label for="newPassword">New password:</label>
+                <input type="text" name = "newPassword" id="newPassword" />
+            </div>
+            <div>
+                <label for="role_id">Role_id:</label>
+                <input type="text" name = "role_id" id="role_id" />
+            </div>
+            <div>
+                <label for="peleton_id">Peleton-id:</label>
+                <input type="text" name = "peleton_id" id="peleton_id" />
+            </div>
+            <button type="submit">Update user</button>
+        </form>
+
+        <br>
+        <h3>Create user</h3>
+        <form action='/register' method="POST">
+            <label for="username">Username:</label>
+            <input type="text" name="username">
+            <br>
+            <label for="firstname">Firstname:</label>
+            <input type="text" name="firstname">
+            <br>
+            <label for="lastname">Lastname:</label>
+            <input type="text" name="lastname">
+            <br>
+            <label for="mobile">Mobile:</label>
+            <input type="text" name="mobile">
+            <br>
+            <label for="email">Email:</label>
+            <input type="text" name="email">
+            <br>
+            <label for="password">Password:</label>
+            <input type="text" name="password">
+            <br>
+            <label for="role_id">Role_id:</label>
+            <input type="text" name="role_id">
+            <br>
+            <label for="peleton_id">Peleton_id:</label>
+            <input type="text" name="peleton_id">
+            <br><br>
+            <button type="submit">Create user</button>
+        </form>
+    </div>
+
+    <script>
+        async function getUsers() {
+            let response = await fetch('/users');
+            let users = await response.json();
+            //let users = data.results; // Assuming that the JSON has a 'results' field containing the users.
+
+            let userTable = document.querySelector('#userTable tbody');
+
+            users.forEach(user => {
+                console.log(user)
+                let row = userTable.insertRow();
+                row.insertCell().textContent = user.ID;
+                row.insertCell().textContent = user.username;
+                row.insertCell().textContent = user.firstname;
+                row.insertCell().textContent = user.lastname;
+                row.insertCell().textContent = user.mobile;
+                row.insertCell().textContent = user.email;
+                row.insertCell().textContent = user.role_id;
+                row.insertCell().textContent = user.peleton_id;
+                row.addEventListener('click', () => {
+                    showUserDetails(user);
+                });
+            });
+        }
+
+        function showUserDetails(user) {
+            document.getElementById('userDetails').style.display = 'block';
+            document.getElementById('ID').value = user.ID;
+            document.getElementById('username').value = user.username;
+            document.getElementById('firstname').value = user.firstname;
+            document.getElementById('lastname').value = user.lastname;
+            document.getElementById('mobile').value = user.mobile;
+            document.getElementById('email').value = user.email;
+            document.getElementById('newPassword').value = "";
+            document.getElementById('role_id').value = user.role_id;
+            document.getElementById('peleton_id').value = user.peleton_id;
+        }
+  
+
+        getUsers();
+
+        
+    </script>
+</body>
+</html>
